@@ -1,8 +1,8 @@
 public without sharing class LoggerImpl implements ILogger {
-    private List<LogMessage> buffer;
+    private List<LogEntry> buffer;
 
     public LoggerImpl() {
-        buffer = new List<LogMessage>();
+        buffer = new List<LogEntry>();
     }
 
     /**
@@ -12,19 +12,19 @@ public without sharing class LoggerImpl implements ILogger {
      * @return
      */
     public ILogger add( String messageToLog ) {
-        this.add( messageToLog, LogMessage.SeverityLevel.LOW );
+        this.add( messageToLog, LogEntry.SeverityLevel.LOW );
         return this;
     }
 
     /**
      * @description Add a message to the buffer without publishing it.
      * @param messageToLog The string message to add to the buffer.
-     * @param severity LogSeverity enum
+     * @param severity LogEntry.SeverityLevel enum
      * @return
      */
-    public ILogger add( String messageToLog, LogMessage.SeverityLevel severity ) {
-        if( severity != null ) severity = LogMessage.SeverityLevel.LOW;
-        buffer.add( LogMessage.newLog( messageToLog, severity ) );
+    public ILogger add( String messageToLog, LogEntry.SeverityLevel severity ) {
+        if( severity != null ) severity = LogEntry.SeverityLevel.LOW;
+        buffer.add( LogEntry.newLog( messageToLog, severity ) );
         return this;
     }
 
@@ -35,7 +35,7 @@ public without sharing class LoggerImpl implements ILogger {
      * @return
      */
     public ILogger add( Exception exceptionToLog ) {
-        this.add( exceptionToLog, LogMessage.SeverityLevel.LOW );
+        this.add( exceptionToLog, LogEntry.SeverityLevel.LOW );
         return this;
     }
 
@@ -43,12 +43,12 @@ public without sharing class LoggerImpl implements ILogger {
      * @description Add an formatted exception message to the buffer without
      * publishing it.
      * @param exceptionToLog Exception to format and log
-     * @param severity LogSeverity enum
+     * @param severity LogEntry.SeverityLevel enum
      * @return
      */
-    public ILogger add( Exception exceptionToLog, LogMessage.SeverityLevel severity ) {
-        if( severity != null ) severity = LogMessage.SeverityLevel.LOW;
-        buffer.add( LogMessage.newExceptionLog( exceptionToLog, severity ) );
+    public ILogger add( Exception exceptionToLog, LogEntry.SeverityLevel severity ) {
+        if( severity != null ) severity = LogEntry.SeverityLevel.LOW;
+        buffer.add( LogEntry.newExceptionLog( exceptionToLog, severity ) );
         return this;
     }
 
@@ -60,7 +60,7 @@ public without sharing class LoggerImpl implements ILogger {
         if( this.buffer.size() == 0 ) return;
 
         fflib_ISObjectUnitOfWork uow = Application.UNITOFWORK.newInstance();
-        for( LogMessage msg : this.buffer ) {
+        for( LogEntry msg : this.buffer ) {
             uow.registerPublishBeforeTransaction( msg.toEvent() );
         }
         uow.commitWork();
@@ -75,7 +75,7 @@ public without sharing class LoggerImpl implements ILogger {
      * @param exceptionToLog exception to format and log
      */
     public void publish( Exception exceptionToLog ) {
-        this.buffer.add( LogMessage.newExceptionLog( exceptionToLog ) );
+        this.buffer.add( LogEntry.newExceptionLog( exceptionToLog ) );
         this.publish();
     }
 
@@ -85,10 +85,10 @@ public without sharing class LoggerImpl implements ILogger {
      * method if you intend to add multiple messages rapidly to minimize DML
      * usage.
      * @param exceptionToLog exception to format and log
-     * @param severityLevel
+     * @param severityLevel LogEntry.SeverityLevel
      */
-    public void publish( Exception exceptionToLog, LogMessage.SeverityLevel severityLevel ) {
-        this.buffer.add( LogMessage.newExceptionLog( exceptionToLog, severityLevel ) );
+    public void publish( Exception exceptionToLog, LogEntry.SeverityLevel severityLevel ) {
+        this.buffer.add( LogEntry.newExceptionLog( exceptionToLog, severityLevel ) );
         this.publish();
     }
 
@@ -100,7 +100,7 @@ public without sharing class LoggerImpl implements ILogger {
      * @param messageToLog String to log
      */
     public void publish( String messageToLog ) {
-        this.buffer.add( LogMessage.newLog( messageToLog ) );
+        this.buffer.add( LogEntry.newLog( messageToLog ) );
         this.publish();
     }
 
@@ -110,10 +110,10 @@ public without sharing class LoggerImpl implements ILogger {
      * method if you intend to add multiple messages rapidly to minimize DML
      * usage.
      * @param messageToLog String to log
-     * @param severityLevel
+     * @param severityLevel LogEntry.SeverityLevel
      */
-    public void publish( String messageToLog, LogMessage.SeverityLevel severityLevel ) {
-        this.buffer.add( LogMessage.newLog( messageToLog, severityLevel ) );
+    public void publish( String messageToLog, LogEntry.SeverityLevel severityLevel ) {
+        this.buffer.add( LogEntry.newLog( messageToLog, severityLevel ) );
         this.publish();
     }
 
@@ -124,7 +124,7 @@ public without sharing class LoggerImpl implements ILogger {
      * usage.
      * @param logMessage LogMessage object to log
      */
-    public void publish( LogMessage logMessage ) {
+    public void publish( LogEntry logMessage ) {
         this.buffer.add( logMessage );
         this.publish();
     }
@@ -136,7 +136,7 @@ public without sharing class LoggerImpl implements ILogger {
     public void saveAllEvents( List<Log_Event__e> events ) {
         fflib_ISObjectUnitOfWork uow = Application.UNITOFWORK.newInstance();
         for(Log_Event__e entry : events) {
-            uow.registerNew( LogMessage.eventToLogRecord(entry) );
+            uow.registerNew( LogEntry.eventToLogRecord(entry) );
         }
         uow.commitWork();
     }

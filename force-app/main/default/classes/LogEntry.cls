@@ -1,9 +1,4 @@
-/**
- * @description Wrapper class used for passing parameters from source class
- * @author Deloitte
- * @date 23/02/2022
- */
-public class LogMessage {
+public class LogEntry {
     /**
      * @description String used to format the governor limits stored in the log
      */
@@ -17,49 +12,49 @@ public class LogMessage {
      * @description Generates a new log object based on the message provided.
      * Assumes LOW severity.
      * @param message String error message to capture in the log
-     * @return LogMessage object required by Logger.
+     * @return LogEntry object required by Logger.
      */
-    public static LogMessage newLog( String message ) {
+    public static LogEntry newLog( String message ) {
         String traceString = new DmlException().getStackTraceString().substringAfter( '\n' );
-        LogMessage logMessage = new LogMessage( message, traceString, LogMessage.SeverityLevel.LOW );
-        return logMessage;
+        LogEntry logEntry = new LogEntry( message, traceString, LogEntry.SeverityLevel.LOW );
+        return logEntry;
     }
 
     /**
      * @description Generates a new log object based on the message and severity level provided.
      * @param message String error message to capture in the log
-     * @param severityLevel LogMessage.SeverityLevel enum to indicate the level of severity
-     * @return LogMessage object required by Logger.
+     * @param severityLevel LogEntry.SeverityLevel enum to indicate the level of severity
+     * @return LogEntry object required by Logger.
      */
-    public static LogMessage newLog( String message, SeverityLevel severityLevel ) {
+    public static LogEntry newLog( String message, SeverityLevel severityLevel ) {
         String traceString = new DmlException().getStackTraceString().substringAfter( '\n' );
-        LogMessage logMessage = new LogMessage( message, traceString, severityLevel );
-        return logMessage;
+        LogEntry logEntry = new LogEntry( message, traceString, severityLevel );
+        return logEntry;
     }
 
     /**
      * @description Generates a new log object based on the exception provided.
      * Assumes LOW severity
      * @param exceptionObj Any standard or custom exception.
-     * @return LogMessage object required by Logger.
+     * @return LogEntry object required by Logger.
      */
-    public static LogMessage newExceptionLog( Exception exceptionObj ) {
+    public static LogEntry newExceptionLog( Exception exceptionObj ) {
         String message = exceptionObj.getMessage().left( 131072 );
         String traceString = exceptionObj.getStackTraceString();
-        return new LogMessage( message, traceString, SeverityLevel.LOW )
+        return new LogEntry( message, traceString, SeverityLevel.LOW )
             .withException( exceptionObj );
     }
 
     /**
      * @description Generates a new log object based on the exception and the severity level provided.
      * @param exceptionObj Any standard or custom exception.
-     * @param severityLevel LogMessage.SeverityLevel enum to indicate the level of severity
-     * @return LogMessage object required by Logger.
+     * @param severityLevel LogEntry.SeverityLevel enum to indicate the level of severity
+     * @return LogEntry object required by Logger.
      */
-    public static LogMessage newExceptionLog( Exception exceptionObj, SeverityLevel severityLevel ) {
+    public static LogEntry newExceptionLog( Exception exceptionObj, SeverityLevel severityLevel ) {
         String message = exceptionObj.getMessage().left( 131072 );
         String traceString = exceptionObj.getStackTraceString();
-        return new LogMessage( message, traceString, severityLevel )
+        return new LogEntry( message, traceString, severityLevel )
             .withException( exceptionObj );
     }
 
@@ -67,12 +62,12 @@ public class LogMessage {
      * @description Generates a new log object for a batch process error.
      * @param message String error message to capture in the log
      * @param batchJobId String Id of the asynchronous job.
-     * @param severityLevel LogMessage.SeverityLevel enum to indicate the level of severity
-     * @return LogMessage object required by Logger.
+     * @param severityLevel LogEntry.SeverityLevel enum to indicate the level of severity
+     * @return LogEntry object required by Logger.
      */
-    public static LogMessage newBatchLog( String message, String batchJobId, SeverityLevel severityLevel ) {
+    public static LogEntry newBatchLog( String message, String batchJobId, SeverityLevel severityLevel ) {
         String traceString = new DmlException().getStackTraceString().substringAfter( '\n' );
-        return new LogMessage( message, traceString, severityLevel )
+        return new LogEntry( message, traceString, severityLevel )
             .withBatchJobId( batchJobId );
     }
 
@@ -80,13 +75,13 @@ public class LogMessage {
      * @description Generates a new log object for a batch process exception.
      * @param exceptionObj Any standard or custom exception.
      * @param batchJobId String Id of the asynchronous job.
-     * @param severityLevel LogMessage.SeverityLevel enum to indicate the level of severity
-     * @return LogMessage object required by Logger.
+     * @param severityLevel LogEntry.SeverityLevel enum to indicate the level of severity
+     * @return LogEntry object required by Logger.
      */
-    public static LogMessage newBatchLog( Exception exceptionObj, String batchJobId, SeverityLevel severityLevel ) {
+    public static LogEntry newBatchLog( Exception exceptionObj, String batchJobId, SeverityLevel severityLevel ) {
         String message = exceptionObj.getMessage().left( 131072 );
         String traceString = exceptionObj.getStackTraceString();
-        return new LogMessage( message, traceString, severityLevel )
+        return new LogEntry( message, traceString, severityLevel )
             .withBatchJobId( batchJobId )
             .withException( exceptionObj );
     }
@@ -97,11 +92,11 @@ public class LogMessage {
      * @param responseStatus The response status value from System.HttpResponse.getStatus()
      * @param responseStatusCode The response status code from System.HttpResponse.getStatusCode()
      * @param requestEndpoint The target url for the callout from System.HttpRequest.getEndpoint()
-     * @return LogMessage object required by Logger.
+     * @return LogEntry object required by Logger.
      */
-    public static LogMessage newCalloutLog( String message, String responseStatus, String responseStatusCode, String requestEndpoint ) {
+    public static LogEntry newCalloutLog( String message, String responseStatus, String responseStatusCode, String requestEndpoint ) {
         String traceString = new DmlException().getStackTraceString().substringAfter( '\n' );
-        return new LogMessage( message, traceString, SeverityLevel.LOW )
+        return new LogEntry( message, traceString, SeverityLevel.LOW )
             .withCallout( responseStatus, responseStatusCode, requestEndpoint )
             .withLogType( LogCategory.API_CALLOUT_EXCEPTION );
     }
@@ -110,12 +105,12 @@ public class LogMessage {
      * @description Generates a new log object for a list of failed Database.SaveResult objects
      * @param dmlResultList List of Database.SaveResult objects
      * @param dmlRecordList List of SObjects included in the DML transaction
-     * @param severityLevel LogMessage.SeverityLevel enum to indicate the level of severity
-     * @return LogMessage object required by Logger.
+     * @param severityLevel LogEntry.SeverityLevel enum to indicate the level of severity
+     * @return LogEntry object required by Logger.
      */
-    public static LogMessage newDmlLog( List<Database.SaveResult> dmlResultList, List<SObject> dmlRecordList, SeverityLevel severityLevel ) {
+    public static LogEntry newDmlLog( List<Database.SaveResult> dmlResultList, List<SObject> dmlRecordList, SeverityLevel severityLevel ) {
         String traceString = new DmlException().getStackTraceString().substringAfter( '\n' );
-        return new LogMessage( '', traceString, severityLevel )
+        return new LogEntry( '', traceString, severityLevel )
             .withLogType( LogCategory.DML_EXCEPTION )
             .withDmlResults( dmlResultList, dmlRecordList );
     }
@@ -124,12 +119,12 @@ public class LogMessage {
      * @description Generates a new log object for a list of failed Database.UpsertResult objects
      * @param dmlResultList List of Database.UpsertResult objects
      * @param dmlRecordList List of SObjects included in the DML transaction
-     * @param severityLevel LogMessage.SeverityLevel enum to indicate the level of severity
-     * @return LogMessage object required by Logger.
+     * @param severityLevel LogEntry.SeverityLevel enum to indicate the level of severity
+     * @return LogEntry object required by Logger.
      */
-    public static LogMessage newDmlLog( List<Database.UpsertResult> dmlResultList, List<SObject> dmlRecordList, SeverityLevel severityLevel ) {
+    public static LogEntry newDmlLog( List<Database.UpsertResult> dmlResultList, List<SObject> dmlRecordList, SeverityLevel severityLevel ) {
         String traceString = new DmlException().getStackTraceString().substringAfter( '\n' );
-        return new LogMessage( '', traceString, severityLevel )
+        return new LogEntry( '', traceString, severityLevel )
             .withLogType( LogCategory.DML_EXCEPTION )
             .withDmlResults( dmlResultList, dmlRecordList );
     }
@@ -138,12 +133,12 @@ public class LogMessage {
      * @description Generates a new log object for a list of failed Database.DeleteResult objects
      * @param dmlResultList List of Database.DeleteResult objects
      * @param dmlRecordList List of SObjects included in the DML transaction
-     * @param severityLevel LogMessage.SeverityLevel enum to indicate the level of severity
-     * @return LogMessage object required by Logger.
+     * @param severityLevel LogEntry.SeverityLevel enum to indicate the level of severity
+     * @return LogEntry object required by Logger.
      */
-    public static LogMessage newDmlLog( List<Database.DeleteResult> dmlResultList, List<SObject> dmlRecordList, SeverityLevel severityLevel ) {
+    public static LogEntry newDmlLog( List<Database.DeleteResult> dmlResultList, List<SObject> dmlRecordList, SeverityLevel severityLevel ) {
         String traceString = new DmlException().getStackTraceString().substringAfter( '\n' );
-        return new LogMessage( '', traceString, severityLevel )
+        return new LogEntry( '', traceString, severityLevel )
             .withLogType( LogCategory.DML_EXCEPTION )
             .withDmlResults( dmlResultList, dmlRecordList );
     }
@@ -325,7 +320,7 @@ public class LogMessage {
      * @description Constructor
      * @param trace String stack trace that is used to derive the class name and class method
      */
-    public LogMessage( String trace ) {
+    public LogEntry( String trace ) {
         this( '', trace );
     }
 
@@ -334,7 +329,7 @@ public class LogMessage {
      * @param message String error message to log
      * @param trace String stack trace that is used to derive the class name and class method
      */
-    public LogMessage( String message, String trace ) {
+    public LogEntry( String message, String trace ) {
         this( message, trace, SeverityLevel.LOW );
     }
 
@@ -343,7 +338,7 @@ public class LogMessage {
      * @param exceptionObj Any custom or standard exception object
      * @param severityLevel SeverityLog enum
      */
-    public LogMessage( Exception exceptionObj, SeverityLevel severityLevel ) {
+    public LogEntry( Exception exceptionObj, SeverityLevel severityLevel ) {
         this(
             exceptionObj.getMessage(),
             exceptionObj.getStackTraceString(),
@@ -357,7 +352,7 @@ public class LogMessage {
      * @param trace String stack trace that is used to derive the class name and class method
      * @param severityLevel SeverityLog enum
      */
-    public LogMessage( String message, String trace, SeverityLevel severityLevel ) {
+    public LogEntry( String message, String trace, SeverityLevel severityLevel ) {
         this.message = message;
         this.className = getClassName( trace );
         this.methodName = getMethodName( trace );
@@ -367,43 +362,43 @@ public class LogMessage {
     }
 
     /**
-     * @description Fluent method to apply a LogCategory value to the LogMessage object
+     * @description Fluent method to apply a LogCategory value to the LogEntry object
      * @param logCategory LogCategory enum
-     * @return LogMessage this
+     * @return LogEntry this
      */
-    public LogMessage withLogType( LogCategory logCategory ) {
+    public LogEntry withLogType( LogCategory logCategory ) {
         this.logType = logCategory.name();
         return this;
     }
 
     /**
-     * @description Fluent method to apply a batchJobId value to the LogMessage object
+     * @description Fluent method to apply a batchJobId value to the LogEntry object
      * @param batchJobId String id of the async apex job
-     * @return LogMessage this
+     * @return LogEntry this
      */
-    public LogMessage withBatchJobId( String batchJobId ) {
+    public LogEntry withBatchJobId( String batchJobId ) {
         this.batchJobId = batchJobId;
         return this;
     }
 
     /**
-     * @description Fluent method to apply an Exception object to the LogMessage object
+     * @description Fluent method to apply an Exception object to the LogEntry object
      * @param e Exception object
-     * @return LogMessage this
+     * @return LogEntry this
      */
-    public LogMessage withException( Exception e ) {
+    public LogEntry withException( Exception e ) {
         this.exceptionObj = e;
         return this;
     }
 
     /**
-     * @description Fluent method to apply callout values to the LogMessage object
+     * @description Fluent method to apply callout values to the LogEntry object
      * @param responseStatus HttpResponse.getStatus() value
      * @param responseStatusCode HttpResponse.getStatusCode() value
      * @param requestEndpoint HttpRequest.getEndpoint() value
-     * @return LogMessage this
+     * @return LogEntry this
      */
-    public LogMessage withCallout( String responseStatus, String responseStatusCode, String requestEndpoint ) {
+    public LogEntry withCallout( String responseStatus, String responseStatusCode, String requestEndpoint ) {
         this.calloutResponseStatus = responseStatus;
         this.calloutResponseStatusCode = responseStatusCode;
         this.calloutRequestEndpoint = requestEndpoint;
@@ -411,12 +406,12 @@ public class LogMessage {
     }
 
     /**
-     * @description Fluent method to apply Database.SaveResult values to the LogMessage object
+     * @description Fluent method to apply Database.SaveResult values to the LogEntry object
      * @param dmlResultList List<Database.SaveResult> objects
      * @param dmlRecordList List<SObject> records in the DML transaction
-     * @return LogMessage this
+     * @return LogEntry this
      */
-    public LogMessage withDmlResults( List<Database.SaveResult> dmlResultList, List<SObject> dmlRecordList ) {
+    public LogEntry withDmlResults( List<Database.SaveResult> dmlResultList, List<SObject> dmlRecordList ) {
         if( dmlResultList == null || dmlResultList.isEmpty() ) return this;
 
         Set<String> errors = new Set<String>();
@@ -437,12 +432,12 @@ public class LogMessage {
     }
 
     /**
-     * @description Fluent method to apply Database.UpsertResult values to the LogMessage object
+     * @description Fluent method to apply Database.UpsertResult values to the LogEntry object
      * @param dmlResultList List<Database.UpsertResult> objects
      * @param dmlRecordList List<SObject> records in the DML transaction
-     * @return LogMessage this
+     * @return LogEntry this
      */
-    public LogMessage withDmlResults( List<Database.UpsertResult> dmlResultList, List<SObject> dmlRecordList ) {
+    public LogEntry withDmlResults( List<Database.UpsertResult> dmlResultList, List<SObject> dmlRecordList ) {
         if( dmlResultList == null || dmlResultList.isEmpty() ) return this;
 
         Set<String> errors = new Set<String>();
@@ -463,12 +458,12 @@ public class LogMessage {
     }
 
     /**
-     * @description Fluent method to apply Database.DeleteResult values to the LogMessage object
+     * @description Fluent method to apply Database.DeleteResult values to the LogEntry object
      * @param dmlResultList List<Database.DeleteResult> objects
      * @param dmlRecordList List<SObject> records in the DML transaction
-     * @return LogMessage this
+     * @return LogEntry this
      */
-    public LogMessage withDmlResults( List<Database.DeleteResult> dmlResultList, List<SObject> dmlRecordList ) {
+    public LogEntry withDmlResults( List<Database.DeleteResult> dmlResultList, List<SObject> dmlRecordList ) {
         if( dmlResultList == null || dmlResultList.isEmpty() ) return this;
 
         Set<String> errors = new Set<String>();
@@ -544,7 +539,7 @@ public class LogMessage {
      * @param failedRecordIds Set<String> record ids that failed in the DML transaction attempt
      * @return
      */
-    private LogMessage withDmlResults( Set<String> errors, Set<String> failedRecordIds ) {
+    private LogEntry withDmlResults( Set<String> errors, Set<String> failedRecordIds ) {
         this.failedRecordCount += errors.size();
         this.message = convertSetToString( errors, '\n' );
         this.recordId = convertSetToString( failedRecordIds, ', ' );

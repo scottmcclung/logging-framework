@@ -13,7 +13,7 @@ public interface ILogger {
      * @param severity LogMessage.SeverityLevel enum
      * @return Returns the current instance of Logger for fluent method chaining
      */
-    ILogger add( String messageToLog, LogMessage.SeverityLevel severity );
+    ILogger add( String messageToLog, LogEntry.SeverityLevel severity );
 
     /**
      * @description Add an formatted exception message to the buffer without
@@ -31,7 +31,7 @@ public interface ILogger {
      * @param severityLevel LogSeverity enum
      * @return Returns the current instance of Logger for fluent method chaining
      */
-    ILogger add( Exception exceptionToLog, LogMessage.SeverityLevel severityLevel );
+    ILogger add( Exception exceptionToLog, LogEntry.SeverityLevel severityLevel );
 
 
     /**
@@ -58,7 +58,7 @@ public interface ILogger {
      * @param exceptionToLog exception to format and log
      * @param severityLevel LogSeverity enum
      */
-    void publish( Exception exceptionToLog, LogMessage.SeverityLevel severityLevel );
+    void publish( Exception exceptionToLog, LogEntry.SeverityLevel severityLevel );
 
     /**
      * @description Auto-format a custom log message string, add it to the log
@@ -77,7 +77,7 @@ public interface ILogger {
      * @param messageToLog String to log
      * @param severityLevel LogSeverity enum
      */
-    void publish( String messageToLog, LogMessage.SeverityLevel severityLevel );
+    void publish( String messageToLog, LogEntry.SeverityLevel severityLevel );
 
     /**
      * @description Auto-format a custom log message string, add it to the log
@@ -86,7 +86,7 @@ public interface ILogger {
      * usage.
      * @param logMessage LogMessage object to log
      */
-    void publish( LogMessage logMessage );
+    void publish( LogEntry logMessage );
 
     /**
      * @description Stores the log entry events in the Log__c object

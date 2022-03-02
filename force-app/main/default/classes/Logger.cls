@@ -14,7 +14,7 @@ public without sharing class Logger {
      * @param messageToLog The string message to add to the buffer.
      * @param severity LogSeverity enum
      */
-    public static void add( String messageToLog, LogMessage.SeverityLevel severity ) {
+    public static void add( String messageToLog, LogEntry.SeverityLevel severity ) {
         service().add( messageToLog, severity );
     }
 
@@ -33,7 +33,7 @@ public without sharing class Logger {
      * @param exceptionToLog Exception to format and log
      * @param severity LogSeverity enum
      */
-    public static void add( Exception exceptionToLog, LogMessage.SeverityLevel severity ) {
+    public static void add( Exception exceptionToLog, LogEntry.SeverityLevel severity ) {
         service().add( exceptionToLog, severity );
     }
 
@@ -74,7 +74,7 @@ public without sharing class Logger {
      * usage.
      * @param logMessage LogMessage object to log
      */
-    public static void publish( LogMessage logMessage ) {
+    public static void publish( LogEntry logMessage ) {
         service().publish( logMessage );
     }
 
